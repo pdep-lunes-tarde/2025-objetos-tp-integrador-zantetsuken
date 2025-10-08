@@ -1,5 +1,140 @@
 import tpIntegrador.*
 
+const guitarraFenderRoja = new GuitarraFender(color="rojo")
 test "Test de prueba" {
-	assert.equals(4, 2 + 2)
+
+	assert.equals(true, guitarraFenderRoja.estaAfinado())
+}
+const guitarraFenderNegra = new GuitarraFender(color="negro")
+test "El costo de una Fender negra es 15" {
+
+	assert.equals(15, guitarraFenderNegra.costo())
+}
+test "El costo de una Fender roja es 10" {
+
+	assert.equals(10, guitarraFenderRoja.costo())
+}
+
+test "Una Guitarra fender es valiosa"{
+	assert.equals(true, guitarraFenderRoja.esValioso())
+}
+const trompetaJupiter1 = new TrompetaJupiter(tieneSordina = true,temperatura=20)
+const trompetaJupiter2 = new TrompetaJupiter(tieneSordina = false,temperatura=25)
+test "la trompeta jupiter a una temperatura de 20 grados esta afinada"{
+	assert.equals(true, trompetaJupiter1.estaAfinado())
+}
+test "la trompeta jupiter a una temperatura de 25 grados esta afinada"{
+	assert.equals(true, trompetaJupiter2.estaAfinado())
+}
+const trompetaJupiter3 = new TrompetaJupiter(tieneSordina = true,temperatura=19)
+test "la trompeta jupiter a una temperatura de 19 grados NO está afinada"{
+	assert.equals(false, trompetaJupiter3.estaAfinado())
+}
+const trompetaJupiter4 = new TrompetaJupiter(tieneSordina = true,temperatura=26)
+test "la trompeta jupiter a una temperatura de 26 grados NO está afinada"{
+	assert.equals(false, trompetaJupiter4.estaAfinado())
+}
+
+test "Una trompeta Júpiter a una temperatura ambiente de 19 grados, si la afinamos, pasa a estar afinada"{
+	trompetaJupiter3.afinarInstrumento()
+	assert.equals(true, trompetaJupiter3.estaAfinado())
+}
+test "Una trompeta Júpiter cuesta 30 chelines sin sordina"{
+	assert.equals(30, trompetaJupiter2.costo())
+}
+test "Una trompeta Júpiter cuesta 35 chelines con sordina"{
+	trompetaJupiter2.ponerSordina()
+	assert.equals(35, trompetaJupiter4.costo())
+}
+test "la trompeta no es valiosa"{
+	assert.equals(false, trompetaJupiter4.esValioso())
+}
+
+const pianoBechstein1 = new PianoBechstein(ancho=5,largo=5)
+
+test "el piano en una habitacion 5x5 esta afinado"{
+	assert.equals(true, pianoBechstein1.estaAfinado())
+}
+const pianoBechstein2 = new PianoBechstein(ancho=5,largo=4)
+test "el piano en una habitacion de 20 metros cuadrados NO esta afinado"{
+	assert.equals(false, pianoBechstein2.estaAfinado())
+}
+test "el costo de un piano en la habitacion 5x5 es de 10"{
+	assert.equals(10, pianoBechstein1.costo())
+}
+test "el piano en la habitacion 5x5 es valioso"{
+	assert.equals(true, pianoBechstein1.esValioso())
+}
+test "el piano en la habitacion de 20 metros cuadrados NO es valioso"{
+	assert.equals(false, pianoBechstein2.esValioso())
+}
+
+const violinStagg1 = new ViolinStagg(cantidadTremolos=0, tipoPintura="laca acrilica")
+test "el violin stagg comienza afinado(0 tremolos)"{
+	assert.equals(true, violinStagg1.estaAfinado())
+}
+const violinStagg2 = new ViolinStagg(cantidadTremolos=9, tipoPintura="laca acrilica")
+test "el violin con 9 tremolos todavia esta afinado"{
+	assert.equals(true, violinStagg2.estaAfinado())
+}
+const violinStagg3 = new ViolinStagg(cantidadTremolos=10, tipoPintura="laca acrilica")
+test "el violin con 10 tremolos queda desafinado"{
+	assert.equals(false, violinStagg3.estaAfinado())
+}
+test "el violin tiene un costo inicial de 20 chelines"{
+	assert.equals(20, violinStagg1.costo())
+}
+
+const violinStagg4 = new ViolinStagg(cantidadTremolos=2, tipoPintura="latex satinado")
+test "el violin tiene un costo inicial de 18 chelines con 2 tremolos"{
+	assert.equals(18, violinStagg4.costo())
+}
+test "el violin tiene un costo inicial de 15 chelines con 10 tremolos"{
+	assert.equals(15, violinStagg3.costo())
+}
+
+test "pintado con laca acrilica el violin es valioso"{
+	assert.equals(true, violinStagg3.esValioso())
+}
+test "pintado con latex satinado el violin NO es valioso"{
+	assert.equals(false, violinStagg4.esValioso())
+}
+
+test "johan es feliz con una trompeta jupiter"{
+	assert.equals(true, johann.esFeliz())
+}
+
+test "johan No es feliz con un violin stagg"{
+	johann.instrumentoJohann(violinDeJohann)
+	assert.equals(false, johann.esFeliz())
+
+}
+
+test "wolfgang es feliz si johann tiene una trompeta jupiter"{
+	assert.equals(true, wolfgang.esFeliz())
+}
+test "wolfgang NO es feliz si johann tiene un violin stagg"{
+	johann.instrumentoJohann(violinDeJohann)
+	assert.equals(false, wolfgang.esFeliz())
+}
+
+test "giuseppe es feliz con una guitarra fender"{
+	assert.equals(true, giuseppe.esFeliz())
+}
+test "giuseppe NO es feliz con una guitarra fender"{
+	giuseppe.instrumentoGiuseppe(pianoBechsteinGiuseppe)
+	assert.equals(false, giuseppe.esFeliz())
+}
+test "maddalena con el violin stagg sin tremolos es feliz"{
+	assert.equals(true, maddalena.esFeliz())
+}
+
+test "maddalena con el violin stagg con 1 tremolo NO es feliz"{
+	violinMaddalena.hacerTremolo()
+	assert.equals(false, maddalena.esFeliz())
+}
+
+test "cuales son los musicos que son felices?"{
+	johann.instrumentoJohann(violinDeJohann)
+	assert.equals([giuseppe,maddalena], asociacionMusical.quienesSonFelices())
 }
