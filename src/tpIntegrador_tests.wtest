@@ -1,5 +1,258 @@
 import tpIntegrador.*
 
+const guitarraFenderRoja = new GuitarraFender(color="rojo")
 test "Test de prueba" {
-	assert.equals(4, 2 + 2)
+
+	assert.equals(true, guitarraFenderRoja.estaAfinado())
+}
+const guitarraFenderNegra = new GuitarraFender(color="negro")
+test "El costo de una Fender negra es 15" {
+
+	assert.equals(15, guitarraFenderNegra.costo())
+}
+test "El costo de una Fender roja es 10" {
+
+	assert.equals(10, guitarraFenderRoja.costo())
+}
+
+test "Una Guitarra fender es valiosa"{
+	assert.equals(true, guitarraFenderRoja.esValioso())
+}
+const trompetaJupiter1 = new TrompetaJupiter(tieneSordina = true,temperatura=20)
+const trompetaJupiter2 = new TrompetaJupiter(tieneSordina = false,temperatura=25)
+test "la trompeta jupiter a una temperatura de 20 grados esta afinada"{
+	assert.equals(true, trompetaJupiter1.estaAfinado())
+}
+test "la trompeta jupiter a una temperatura de 25 grados esta afinada"{
+	assert.equals(true, trompetaJupiter2.estaAfinado())
+}
+const trompetaJupiter3 = new TrompetaJupiter(tieneSordina = true,temperatura=19)
+test "la trompeta jupiter a una temperatura de 19 grados NO está afinada"{
+	assert.equals(false, trompetaJupiter3.estaAfinado())
+}
+const trompetaJupiter4 = new TrompetaJupiter(tieneSordina = true,temperatura=26)
+test "la trompeta jupiter a una temperatura de 26 grados NO está afinada"{
+	assert.equals(false, trompetaJupiter4.estaAfinado())
+}
+
+test "Una trompeta Júpiter a una temperatura ambiente de 19 grados, si la afinamos, pasa a estar afinada"{
+	trompetaJupiter3.afinar()
+	assert.equals(true, trompetaJupiter3.estaAfinado())
+}
+test "Una trompeta Júpiter cuesta 30 chelines sin sordina"{
+	assert.equals(30, trompetaJupiter2.costo())
+}
+test "Una trompeta Júpiter cuesta 35 chelines con sordina"{
+	trompetaJupiter2.ponerSordina()
+	assert.equals(35, trompetaJupiter4.costo())
+}
+test "la trompeta no es valiosa"{
+	assert.equals(false, trompetaJupiter4.esValioso())
+}
+
+const pianoBechstein1 = new PianoBechstein(ancho=5,largo=5)
+
+test "el piano en una habitacion 5x5 esta afinado"{
+	assert.equals(true, pianoBechstein1.estaAfinado())
+}
+const pianoBechstein2 = new PianoBechstein(ancho=5,largo=4)
+test "el piano en una habitacion de 20 metros cuadrados NO esta afinado"{
+	assert.equals(false, pianoBechstein2.estaAfinado())
+}
+test "el costo de un piano en la habitacion 5x5 es de 10"{
+	assert.equals(10, pianoBechstein1.costo())
+}
+test "el piano en la habitacion 5x5 es valioso"{
+	assert.equals(true, pianoBechstein1.esValioso())
+}
+test "el piano en la habitacion de 20 metros cuadrados NO es valioso"{
+	assert.equals(false, pianoBechstein2.esValioso())
+}
+
+const violinStagg1 = new ViolinStagg(cantidadTremolos=0, tipoPintura="laca acrilica")
+test "el violin stagg comienza afinado(0 tremolos)"{
+	assert.equals(true, violinStagg1.estaAfinado())
+}
+const violinStagg2 = new ViolinStagg(cantidadTremolos=9, tipoPintura="laca acrilica")
+test "el violin con 9 tremolos todavia esta afinado"{
+	assert.equals(true, violinStagg2.estaAfinado())
+}
+const violinStagg3 = new ViolinStagg(cantidadTremolos=10, tipoPintura="laca acrilica")
+test "el violin con 10 tremolos queda desafinado"{
+	assert.equals(false, violinStagg3.estaAfinado())
+}
+test "el violin tiene un costo inicial de 20 chelines"{
+	assert.equals(20, violinStagg1.costo())
+}
+
+const violinStagg4 = new ViolinStagg(cantidadTremolos=2, tipoPintura="latex satinado")
+test "el violin tiene un costo inicial de 18 chelines con 2 tremolos"{
+	assert.equals(18, violinStagg4.costo())
+}
+test "el violin tiene un costo inicial de 15 chelines con 10 tremolos"{
+	assert.equals(15, violinStagg3.costo())
+}
+
+test "pintado con laca acrilica el violin es valioso"{
+	assert.equals(true, violinStagg3.esValioso())
+}
+test "pintado con latex satinado el violin NO es valioso"{
+	assert.equals(false, violinStagg4.esValioso())
+}
+
+test "johan es feliz con una trompeta jupiter"{
+	assert.equals(true, johann.esFeliz())
+}
+
+test "johan No es feliz con un violin stagg"{
+	johann.instrumentoJohann(violinDeJohann)
+	assert.equals(false, johann.esFeliz())
+
+}
+
+test "wolfgang es feliz si johann tiene una trompeta jupiter"{
+	assert.equals(true, wolfgang.esFeliz())
+}
+test "wolfgang NO es feliz si johann tiene un violin stagg"{
+	johann.instrumentoJohann(violinDeJohann)
+	assert.equals(false, wolfgang.esFeliz())
+}
+
+test "giuseppe es feliz con una guitarra fender"{
+	assert.equals(true, giuseppe.esFeliz())
+}
+test "giuseppe NO es feliz con una guitarra fender"{
+	giuseppe.instrumentoGiuseppe(pianoBechsteinGiuseppe)
+	assert.equals(false, giuseppe.esFeliz())
+}
+test "maddalena con el violin stagg sin tremolos es feliz"{
+	assert.equals(true, maddalena.esFeliz())
+}
+
+test "maddalena con el violin stagg con 1 tremolo NO es feliz"{
+	violinMaddalena.hacerTremolo()
+	assert.equals(false, maddalena.esFeliz())
+}
+
+test "cuales son los musicos que son felices?"{
+	johann.instrumentoJohann(violinDeJohann)
+	assert.equals([giuseppe,maddalena], asociacionMusical.quienesSonFelices())
+	//no lo toma porque usa al johan original que tiene guitarra fender
+}
+const instrumentoGenerico1= new InstrumentoGenerico(nombreFamilia="cuerdas", ultimaAfinacion= new Date(day=3,month=10,year=2025))
+test "un instrumento generico NO es copado"{
+	assert.equals(false,instrumentoGenerico1.esCopado())
+
+}
+
+
+
+test "No se puede revisar un instrumento si el tecnico no es especialista en esa flia"{
+	assert.equals(false, instrumentoGenerico1.revisar(tecnico1))
+}
+
+test "no se puede revisar un instrumento si paso menos de una semana"{
+	assert.equals(false, instrumentoGenerico1.revisar(tecnico1))
+}
+
+
+
+const tecnico1 = new Tecnico(nombreTecnico="quintero", especialidad= "viento") // Viento
+const tecnico2 = new Tecnico(nombreTecnico="guinberto", especialidad= "cuerdas") // Cuerdas
+
+
+const instrumentoGenericoCuerdas = new InstrumentoGenerico(nombreFamilia="cuerdas",ultimaAfinacion= new Date(day=3,month=10,year=2025))
+
+const pianoDesafinado = new PianoBechstein(ancho=4, largo=4) // Área 16. Inicialmente desafinado.
+const trompetaDesaf = new TrompetaJupiter(tieneSordina=true, temperatura=19) // Temp 19. Inicialmente desafinada.
+
+
+const fechaBase = new Date(day=10, month=10, year=2025)
+const fechaCorta = fechaBase.plusDays(3) // Menos de 7 días
+const fechaLarga = fechaBase.plusDays(7) // Justo 7 días
+
+describe "Tests del proceso de revision (Punto 5)" {
+    
+    // Función para configurar el estado inicial de los instrumentos antes de cada test
+    method setup() {
+        // Limpiar y poner fecha inicial a los instrumentos a testear
+        instrumentoGenericoCuerdas.revisiones().clear()
+        instrumentoGenericoCuerdas.fechaActual(fechaBase)
+        pianoDesafinado.revisiones().clear()
+        pianoDesafinado.fechaActual(fechaBase)
+        trompetaDesaf.revisiones().clear()
+        trompetaDesaf.fechaActual(fechaBase)
+    }
+
+    //  1
+    test "No se puede revisar un instrumento si el tecnico no es especialista en esa flia" {
+        self.setup()
+        // instrumentoGenericoCuerdas es "cuerdas", tecnico1 es "viento"
+        assert.equals(false, instrumentoGenericoCuerdas.revisar(tecnico1))
+        assert.equals([],instrumentoGenericoCuerdas.revisiones())
+    }
+
+    // 2
+    test "No se puede afinar un instrumento si paso menos de una semana" {
+        self.setup()
+        
+        // Primera revisión (Pasa, es la primera vez)
+        instrumentoGenericoCuerdas.revisar(tecnico2) 
+        
+        // Intento de revisión 3 días después (Debe fallar)
+        instrumentoGenericoCuerdas.fechaActual(fechaCorta)
+        assert.equals(false, instrumentoGenericoCuerdas.revisar(tecnico2))
+        
+        // Intento de revisión 7 días después (Debe pasar)
+        instrumentoGenericoCuerdas.fechaActual(fechaLarga)
+        assert.equals(true, instrumentoGenericoCuerdas.revisar(tecnico2))
+        
+        // Se verifican 2 revisiones exitosas
+        assert.equals(2, instrumentoGenericoCuerdas.revisiones().size())
+    }
+
+    // 3
+    test "Al revisar el instrumento se genera una nueva revision con fecha de hoy y el tecnico" {
+        self.setup()
+        
+        // Aseguramos que el instrumento está listo para ser revisado (fecha base, primera vez)
+        instrumentoGenericoCuerdas.revisar(tecnico2)
+        
+        // Verifica que se registró una revisión
+        assert.equals(1, instrumentoGenericoCuerdas.revisiones().size())
+        
+        // Verifica los datos del registro (tecnico y fecha)
+        const ultimaRevision = instrumentoGenericoCuerdas.ultimaFechaRevision()
+        assert.equals(tecnico2, ultimaRevision.tecnico())
+        assert.equals(fechaBase, ultimaRevision.fecha())
+    }
+
+    // 4
+    test "Al ejecutar el proceso de revision para el piano Bechstein si inicialmente esta desafinado al terminar queda afinado" {
+        self.setup()
+        
+        // Estado inicial: desafinado (área 16)
+        assert.equals(false, pianoDesafinado.estaAfinado())
+        
+        // Ejecutar revisión (afinar: ancho 8, largo 4. Área 32)
+        pianoDesafinado.revisar(tecnico2)
+        
+        // Estado final: debe quedar afinado (área 32 > 20)
+        assert.equals(true, pianoDesafinado.estaAfinado())
+    }
+    
+    // 5
+    test "Al ejecutar el proceso de revision para la trompeta Jupiter si inicialmente esta desafinada al terminar queda afinada" {
+        self.setup()
+        
+        // Estado inicial: desafinada (Temp 19)
+        assert.equals(false, trompetaDesaf.estaAfinado())
+
+        // Ejecutar revisión (afinar: temp + 2 => 21)
+        trompetaDesaf.revisar(tecnico1)
+        
+        // Estado final: debe quedar afinada (Temp 21, rango 20-25)
+        assert.equals(true, trompetaDesaf.estaAfinado())
+        assert.equals(21, trompetaDesaf.temperatura())
+    }
 }
