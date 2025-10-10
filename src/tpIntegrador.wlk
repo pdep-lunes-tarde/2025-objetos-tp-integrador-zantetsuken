@@ -1,11 +1,58 @@
 class Instrumento{
-    var property fechaActual = new Date(day=7,month=10,year=2025) 
+    var property revisiones =[] 
+    var property fechaActual = new Date()  
+    var property ultimaRevision = new Date() 
     method estaAfinado(){}
     method costo(){}
     method esValioso(){}
-    method afinarInstrumento(){} 
-    method familia(){}
+    method familia(){
+        return ""
+
+    }
     method esCopado(){}
+    method afinar(){}
+    
+   method revisar(tecnico) { 
+        // 1. Verificar especialidad del técnico
+        if (!tecnico.esEspecialista(self.familia())) {
+            return false 
+        }
+        
+        // 2. Verificar restricción de tiempo (una semana)
+        if (!self.puedeSerRevisado()) {
+            return false 
+        }
+        
+        // 3. Ejecutar afinación específica (Polimorfismo)
+        self.afinar()
+
+        // 4. Registrar la nueva verificación
+        self.registrarRevision(tecnico)
+        return true
+    }
+
+    method puedeSerRevisado() {
+        // Primera revisión, OK
+        if (revisiones.isEmpty()) {
+            return true
+        }
+        
+        const ultimaFecha = self.ultimaFechaRevision().fecha()
+        
+        // La resta (fechaActual - ultimaFecha) da la diferencia en días.
+        return fechaActual - ultimaFecha >= 7
+    }
+    method registrarRevision(tecnico) {
+        revisiones.add(new Revision(tecnico=tecnico,fecha=self.fechaActual()))
+      
+    }
+    method ultimaFechaRevision() {
+      return self.revisiones().last()
+    }
+    method revisionesRecientes() {
+        return revisiones.filter({ revision => fechaActual - revision.fecha() <= 60})
+    }
+    
 }
 
 class GuitarraFender inherits Instrumento{
@@ -39,7 +86,7 @@ class TrompetaJupiter inherits Instrumento{
     override method estaAfinado(){return temperatura>=20 && temperatura <=25
     }
 
-    override method afinarInstrumento() {
+    override method afinar() {
         self.soplarTrompeta()
     }
 
@@ -67,11 +114,12 @@ class TrompetaJupiter inherits Instrumento{
 
     override method esCopado(){return self.tieneSordina()}
 
+
 }
 class PianoBechstein inherits Instrumento{
     var ancho
     var largo
-    var ultimaFechaRevision = new Date(day=24,month=11,year=2017)
+    var ultimaFechaAfinacion = new Date()
 
 
     method tamanioHabitacion() {return ancho*largo}
@@ -90,6 +138,12 @@ class PianoBechstein inherits Instrumento{
     override method esCopado(){
         return ancho>6 || largo>6
     }
+
+    override method afinar() {
+      ancho = 8
+      largo = 4
+    }
+
 
 }
 
@@ -119,6 +173,10 @@ class ViolinStagg inherits Instrumento{
     return "cuerdas"
   }
   override method esCopado() {return false}
+
+  override method afinar() {
+    self.logicaAfinacionEspecifica()
+  }
 
 }
 
@@ -218,8 +276,7 @@ class Orquesta{
 
 class InstrumentoGenerico inherits Instrumento{
     var nombreFamilia
-    var ultimaAfinacion
-    var ultimaFechaRevision = new Date(day=24,month=9,year=2025)
+    var ultimaAfinacion 
     var valorAzar=1
     override method costo() {
         
@@ -245,7 +302,10 @@ class InstrumentoGenerico inherits Instrumento{
     }
 
     override method estaAfinado() {
-      return fechaActual.minusMonth(ultimaFechaRevision)
+      return fechaActual.minusMonth(ultimaAfinacion)
+    }
+    override method esCopado() {
+      return false
     }
 }
 
@@ -261,4 +321,5 @@ class Tecnico{
     method esEspecialista(familiaInstrumento) {
       return especialidad == familiaInstrumento
     }
+
 }

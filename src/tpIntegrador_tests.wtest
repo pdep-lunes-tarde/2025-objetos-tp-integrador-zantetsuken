@@ -36,7 +36,7 @@ test "la trompeta jupiter a una temperatura de 26 grados NO está afinada"{
 }
 
 test "Una trompeta Júpiter a una temperatura ambiente de 19 grados, si la afinamos, pasa a estar afinada"{
-	trompetaJupiter3.afinarInstrumento()
+	trompetaJupiter3.afinar()
 	assert.equals(true, trompetaJupiter3.estaAfinado())
 }
 test "Una trompeta Júpiter cuesta 30 chelines sin sordina"{
@@ -137,4 +137,122 @@ test "maddalena con el violin stagg con 1 tremolo NO es feliz"{
 test "cuales son los musicos que son felices?"{
 	johann.instrumentoJohann(violinDeJohann)
 	assert.equals([giuseppe,maddalena], asociacionMusical.quienesSonFelices())
+	//no lo toma porque usa al johan original que tiene guitarra fender
+}
+const instrumentoGenerico1= new InstrumentoGenerico(nombreFamilia="cuerdas", ultimaAfinacion= new Date(day=3,month=10,year=2025))
+test "un instrumento generico NO es copado"{
+	assert.equals(false,instrumentoGenerico1.esCopado())
+
+}
+
+
+
+test "No se puede revisar un instrumento si el tecnico no es especialista en esa flia"{
+	assert.equals(false, instrumentoGenerico1.revisar(tecnico1))
+}
+
+test "no se puede revisar un instrumento si paso menos de una semana"{
+	assert.equals(false, instrumentoGenerico1.revisar(tecnico1))
+}
+
+
+
+const tecnico1 = new Tecnico(nombreTecnico="quintero", especialidad= "viento") // Viento
+const tecnico2 = new Tecnico(nombreTecnico="guinberto", especialidad= "cuerdas") // Cuerdas
+
+
+const instrumentoGenericoCuerdas = new InstrumentoGenerico(nombreFamilia="cuerdas",ultimaAfinacion= new Date(day=3,month=10,year=2025))
+
+const pianoDesafinado = new PianoBechstein(ancho=4, largo=4) // Área 16. Inicialmente desafinado.
+const trompetaDesaf = new TrompetaJupiter(tieneSordina=true, temperatura=19) // Temp 19. Inicialmente desafinada.
+
+
+const fechaBase = new Date(day=10, month=10, year=2025)
+const fechaCorta = fechaBase.plusDays(3) // Menos de 7 días
+const fechaLarga = fechaBase.plusDays(7) // Justo 7 días
+
+describe "Tests del proceso de revision (Punto 5)" {
+    
+    // Función para configurar el estado inicial de los instrumentos antes de cada test
+    method setup() {
+        // Limpiar y poner fecha inicial a los instrumentos a testear
+        instrumentoGenericoCuerdas.revisiones().clear()
+        instrumentoGenericoCuerdas.fechaActual(fechaBase)
+        pianoDesafinado.revisiones().clear()
+        pianoDesafinado.fechaActual(fechaBase)
+        trompetaDesaf.revisiones().clear()
+        trompetaDesaf.fechaActual(fechaBase)
+    }
+
+    //  1
+    test "No se puede revisar un instrumento si el tecnico no es especialista en esa flia" {
+        self.setup()
+        // instrumentoGenericoCuerdas es "cuerdas", tecnico1 es "viento"
+        assert.equals(false, instrumentoGenericoCuerdas.revisar(tecnico1))
+        assert.equals([],instrumentoGenericoCuerdas.revisiones())
+    }
+
+    // 2
+    test "No se puede afinar un instrumento si paso menos de una semana" {
+        self.setup()
+        
+        // Primera revisión (Pasa, es la primera vez)
+        instrumentoGenericoCuerdas.revisar(tecnico2) 
+        
+        // Intento de revisión 3 días después (Debe fallar)
+        instrumentoGenericoCuerdas.fechaActual(fechaCorta)
+        assert.equals(false, instrumentoGenericoCuerdas.revisar(tecnico2))
+        
+        // Intento de revisión 7 días después (Debe pasar)
+        instrumentoGenericoCuerdas.fechaActual(fechaLarga)
+        assert.equals(true, instrumentoGenericoCuerdas.revisar(tecnico2))
+        
+        // Se verifican 2 revisiones exitosas
+        assert.equals(2, instrumentoGenericoCuerdas.revisiones().size())
+    }
+
+    // 3
+    test "Al revisar el instrumento se genera una nueva revision con fecha de hoy y el tecnico" {
+        self.setup()
+        
+        // Aseguramos que el instrumento está listo para ser revisado (fecha base, primera vez)
+        instrumentoGenericoCuerdas.revisar(tecnico2)
+        
+        // Verifica que se registró una revisión
+        assert.equals(1, instrumentoGenericoCuerdas.revisiones().size())
+        
+        // Verifica los datos del registro (tecnico y fecha)
+        const ultimaRevision = instrumentoGenericoCuerdas.ultimaFechaRevision()
+        assert.equals(tecnico2, ultimaRevision.tecnico())
+        assert.equals(fechaBase, ultimaRevision.fecha())
+    }
+
+    // 4
+    test "Al ejecutar el proceso de revision para el piano Bechstein si inicialmente esta desafinado al terminar queda afinado" {
+        self.setup()
+        
+        // Estado inicial: desafinado (área 16)
+        assert.equals(false, pianoDesafinado.estaAfinado())
+        
+        // Ejecutar revisión (afinar: ancho 8, largo 4. Área 32)
+        pianoDesafinado.revisar(tecnico2)
+        
+        // Estado final: debe quedar afinado (área 32 > 20)
+        assert.equals(true, pianoDesafinado.estaAfinado())
+    }
+    
+    // 5
+    test "Al ejecutar el proceso de revision para la trompeta Jupiter si inicialmente esta desafinada al terminar queda afinada" {
+        self.setup()
+        
+        // Estado inicial: desafinada (Temp 19)
+        assert.equals(false, trompetaDesaf.estaAfinado())
+
+        // Ejecutar revisión (afinar: temp + 2 => 21)
+        trompetaDesaf.revisar(tecnico1)
+        
+        // Estado final: debe quedar afinada (Temp 21, rango 20-25)
+        assert.equals(true, trompetaDesaf.estaAfinado())
+        assert.equals(21, trompetaDesaf.temperatura())
+    }
 }
